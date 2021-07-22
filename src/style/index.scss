@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import './variable';
+@import './fonts';
+@import './loader';
+@import './shadow';
+
+body,
+html,
+#root {
+  height: 100%;
+  width: 100%;
+}
+.app-wrapper {
+  grid-template-rows: auto 1fr;
+}
+.center-search {
+  left: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.search {
+  padding: 0 5% 0 15%;
+}
