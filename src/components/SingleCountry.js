@@ -99,7 +99,7 @@ const SingleCountry = () => {
         <BsArrowLeft /> <span>Back</span>
       </Link>
       <div className={`mt-10 flex md:flex-row flex-col md:gap-12 gap-12`}>
-        <div className='h-full md:min-w-2/5 md:w-3/6'>
+        <div className='md:h-full md:min-w-2/5 md:w-3/6'>
           <img src={flag} alt={`${demonym} flag`} className={`h-full`} />
         </div>
         <section
