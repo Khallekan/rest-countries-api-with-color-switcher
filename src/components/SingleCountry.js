@@ -50,7 +50,6 @@ const SingleCountry = () => {
       throw new Error(error);
     }
   };
-
   useEffect(() => {
     setBorderNames([]);
     const url = `https://restcountries.eu/rest/v2/name/${name}`;
@@ -69,14 +68,6 @@ const SingleCountry = () => {
         return [...oldState, newBorderName];
       });
     });
-    // const getNewBorderNames = async () => {
-    //   const { borders } = countryData;
-    //   const newBorderNames = await borders.map(async (border) => {
-    //     let borderArr = await fetchCodeCountries(border);
-    //     return borderArr;
-    //   });
-    //   return setBorderNames({ ...newBorderNames });
-    // };
   }, [countryData]);
 
   if (Object.keys(countryData).length === 0) {
