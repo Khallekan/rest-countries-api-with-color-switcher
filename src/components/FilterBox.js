@@ -8,7 +8,6 @@ const FilterBox = () => {
 
   const filterData = async (region) => {
     dispatch({ type: `SET_LOADING_TRUE` });
-    console.log(region);
     const url = `https://restcountries.eu/rest/v2/region/${region}`;
     try {
       const resp = await fetch(url);
