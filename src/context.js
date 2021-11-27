@@ -1,10 +1,10 @@
-import React, { useContext, useReducer, useEffect } from 'react';
-import reducer from './reducer';
+import React, { useContext, useReducer, useEffect, useCallback } from "react";
+import reducer from "./reducer";
 
 const AppContext = React.createContext();
 
 const initialState = {
-  darkMode: localStorage.getItem('darkMode') || false,
+  darkMode: localStorage.getItem("darkMode") || false,
   searchValue: ``,
   countriesList: [],
   isLoading: true,
@@ -26,14 +26,15 @@ const AppProvider = ({ children }) => {
 
   const getRegions = (data) => {
     const regions = data.reduce((acc, country) => {
-      return new Set([...acc, country.region]);
+      return Array.from(new Set([...acc, country.region]));
     }, []);
-    dispatch({ type: 'SET_REGIONS', payload: regions });
+    dispatch({ type: "SET_REGIONS", payload: regions });
+    return;
   };
 
-  const fetchCountries = async () => {
+  const fetchCountries = useCallback(async () => {
     dispatch({ type: `SET_LOADING_TRUE` });
-    const url = `https://restcountries.eu/rest/v2/all`;
+    const url = `https://restcountries.com/v2/all`;
     try {
       const resp = await fetch(url);
       const data = await resp.json();
@@ -48,41 +49,20 @@ const AppProvider = ({ children }) => {
       throw new Error(error);
     } finally {
       dispatch({ type: `SET_LOADING_FALSE` });
-    }
-  };
-
-  const fetchSearchCountries = async () => {
-    const url = `https://restcountries.eu/rest/v2/name/${state.searchValue}`;
-
-    const resp = await fetch(url);
-    if (resp.status === 404) {
-      dispatch({ type: `SET_LOADING_FALSE` });
-      dispatch({ type: `NO_COUNTRIES_MATCH` });
       return;
     }
-    const data = await resp.json();
-    dispatch({ type: `UPDATE_COUNTRIES_LIST`, payload: data });
-
-    dispatch({ type: `SET_LOADING_FALSE` });
-  };
+  }, []);
 
   useEffect(() => {
     if (state.darkMode === null) {
       dispatch({ type: `DARK_MODE_FALSE` });
     }
-    return fetchCountries();
-  }, []);
+    return;
+  }, [state.darkMode]);
 
   useEffect(() => {
-    if (state.searchValue.length === 0) {
-      return fetchCountries();
-    }
-    if (state.countriesList && state.searchValue !== 0) {
-      dispatch({ type: `SET_LOADING_TRUE` });
-      return fetchSearchCountries();
-    }
-    return;
-  }, [state.searchValue]);
+    fetchCountries();
+  }, [fetchCountries]);
 
   return (
     <AppContext.Provider value={{ ...state, dispatch }}>

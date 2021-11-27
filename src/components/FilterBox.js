@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { BiChevronDown } from 'react-icons/bi';
-import { useGlobalContext } from '../context';
+import React, { useEffect, useState, useRef } from "react";
+import { BiChevronDown } from "react-icons/bi";
+import { useGlobalContext } from "../context";
 const FilterBox = () => {
   const { darkMode, allRegions, dispatch, isDropDownOpen } = useGlobalContext();
   const [regions, setRegions] = useState([]);
@@ -8,11 +8,14 @@ const FilterBox = () => {
 
   const filterData = async (region) => {
     dispatch({ type: `SET_LOADING_TRUE` });
-    const url = `https://restcountries.eu/rest/v2/region/${region}`;
+    const url = `https://restcountries.com/v2/all`;
     try {
       const resp = await fetch(url);
       const data = await resp.json();
-      dispatch({ type: `UPDATE_COUNTRIES_LIST`, payload: data });
+      let filteredData = data.filter((item) => {
+        return item.region === region;
+      });
+      dispatch({ type: `UPDATE_COUNTRIES_LIST`, payload: filteredData });
     } catch (error) {
       throw new Error(error);
     } finally {
@@ -22,7 +25,7 @@ const FilterBox = () => {
 
   useEffect(() => {
     setRegions(Array.from(allRegions));
-  }, [allRegions]);
+  }, [allRegions, setRegions]);
 
   useEffect(() => {
     if (dropDownRef !== null) {
@@ -32,7 +35,7 @@ const FilterBox = () => {
       });
     }
     return;
-  }, [dropDownRef]);
+  }, [dropDownRef, dispatch]);
 
   return (
     <div
@@ -52,12 +55,12 @@ const FilterBox = () => {
 
       {isDropDownOpen && (
         <div
-          className={`flex flex-col gap-2 rounded absolute w-full top-full left-0 p-6 mt-1 ${
+          className={`flex flex-col gap-2 rounded absolute w-full top-full left-0 p-6 mt-1 z-50 ${
             darkMode ? `bg-darkBlue text-white` : `bg-white`
           }`}
         >
           {regions.length === 0
-            ? 'No regions available'
+            ? "No regions available"
             : regions.map((region, index) => {
                 return (
                   <div onClick={() => filterData(region)} key={index}>
@@ -67,15 +70,6 @@ const FilterBox = () => {
               })}
         </div>
       )}
-      {/* <select
-        name='continent'
-        id='continent'
-        className={` h-full w-full outline-none lg-px-5 `}
-      >
-        <option value='null' disabled defaultValue>
-          Select your option
-        </option>
-      </select> */}
     </div>
   );
 };

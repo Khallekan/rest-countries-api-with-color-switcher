@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
-import { useGlobalContext } from '../context';
-import Loading from './Loading';
-import { BsArrowLeft } from 'react-icons/bs';
+import React, { useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
+import { useGlobalContext } from "../context";
+import Loading from "./Loading";
+import { BsArrowLeft } from "react-icons/bs";
 
 const SingleCountry = () => {
   const { name } = useParams();
@@ -25,11 +25,11 @@ const SingleCountry = () => {
   } = countryData;
 
   const numberWithCommas = (x) => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  const fetchCodeCountries = async (code) => {
-    const url = `https://restcountries.eu/rest/v2/alpha/${code}`;
+  const fetchCodeCountries = useCallback(async (code) => {
+    const url = `https://restcountries.com/v2/alpha/${code}`;
     let countryName;
     try {
       const resp = await fetch(url),
@@ -39,22 +39,27 @@ const SingleCountry = () => {
     } catch (error) {
       throw new Error(error);
     }
-  };
+  }, []);
 
-  const fetchSingleCountry = async (url) => {
-    try {
-      const resp = await fetch(url);
-      const data = await resp.json();
-      setCountryData(data[0]);
-    } catch (error) {
-      throw new Error(error);
-    }
-  };
+  const fetchSingleCountry = useCallback(
+    async (name) => {
+      setBorderNames([]);
+      const url = `https://restcountries.com/v2/name/${name}`;
+      try {
+        const resp = await fetch(url);
+        const data = await resp.json();
+        setCountryData(data[0]);
+      } catch (error) {
+        throw new Error(error);
+      }
+      return;
+    },
+    [setBorderNames]
+  );
+
   useEffect(() => {
-    setBorderNames([]);
-    const url = `https://restcountries.eu/rest/v2/name/${name}`;
-    fetchSingleCountry(url);
-  }, [name]);
+    fetchSingleCountry(name);
+  }, [name, fetchSingleCountry]);
 
   useEffect(() => {
     if (Object.keys(countryData).length === 0) {
@@ -62,13 +67,15 @@ const SingleCountry = () => {
     }
 
     const { borders } = countryData;
+
+    if (borders === undefined || borders.length === 0) return;
     borders.map(async (border) => {
       const newBorderName = await fetchCodeCountries(border);
       setBorderNames((oldState) => {
         return [...oldState, newBorderName];
       });
     });
-  }, [countryData]);
+  }, [countryData, fetchCodeCountries]);
 
   if (Object.keys(countryData).length === 0) {
     return <Loading />;
@@ -106,11 +113,11 @@ const SingleCountry = () => {
           >
             <div className={`flex flex-col md:gap-2 gap-1 md:w-3/6`}>
               <p>
-                <span className={`font-semibold`}>Native Name:</span>{' '}
+                <span className={`font-semibold`}>Native Name:</span>{" "}
                 {nativeName}
               </p>
               <p>
-                <span className={`font-semibold`}>Population:</span>{' '}
+                <span className={`font-semibold`}>Population:</span>{" "}
                 {numberWithCommas(population)}
               </p>
               <p>
@@ -125,29 +132,29 @@ const SingleCountry = () => {
             </div>
             <div className={`flex flex-col md:gap-2 gap-1 md:w-3/6`}>
               <p>
-                <span className={`font-semibold`}>Top Level Domain:</span>{' '}
+                <span className={`font-semibold`}>Top Level Domain:</span>{" "}
                 {topLevelDomain}
               </p>
               <p>
-                <span className={`font-semibold`}>Currencies:</span>{' '}
+                <span className={`font-semibold`}>Currencies:</span>{" "}
                 {currencies
                   .map((currency) => {
                     return currency.name;
                   })
-                  .join(', ')}
+                  .join(", ")}
               </p>
               <p>
-                <span className={`font-semibold`}>Languages:</span>{' '}
+                <span className={`font-semibold`}>Languages:</span>{" "}
                 {languages
                   .map((language) => {
                     return language.name;
                   })
-                  .join(', ')}
+                  .join(", ")}
               </p>
             </div>
           </div>
           <div className={`lg:text-lg md:text-base lg:mt-12 md:mt-6`}>
-            <span className={`font-semibold`}>Border Countries: </span>{' '}
+            <span className={`font-semibold`}>Border Countries: </span>{" "}
             {borderNames.length === 0 ? (
               `Not available`
             ) : (

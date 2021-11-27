@@ -1,11 +1,11 @@
-import React from 'react';
-import SearchFilter from './SearchFilter';
-import Loading from '../components/Loading';
-import Country from '../components/Country';
-import Error from '../components/Error';
-import { useGlobalContext } from '../context';
+import React from "react";
+import SearchFilter from "./SearchFilter";
+import Loading from "../components/Loading";
+import Country from "../components/Country";
+import Error from "../components/Error";
+import { useGlobalContext } from "../context";
 const CountryList = () => {
-  const { darkMode, isLoading, countriesList, dropDown } = useGlobalContext();
+  const { darkMode, isLoading, countriesList, dispatch } = useGlobalContext();
 
   return (
     <div
@@ -20,7 +20,10 @@ const CountryList = () => {
       {!isLoading && countriesList.length === 0 && <Error />}
       {!isLoading && countriesList.length > 0 && (
         <div
-          className={`grid grid-rows-5 lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-10 md:gap-4 gap-6 lg:mt-12 mt-6`}
+          className={`grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-10 md:gap-4 gap-6 lg:mt-12 mt-6`}
+          onClick={() =>
+            dispatch({ type: "HANDLE_DROPDOWN_NEW", payload: false })
+          }
         >
           {countriesList.map((country, index) => {
             return <Country key={index} {...country} />;

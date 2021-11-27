@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Header from '../components/Header';
-import CountryList from './CountryList';
-import SingleCountry from '../components/SingleCountry';
-import { useGlobalContext } from '../context';
+import React, { useEffect } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Header from "../components/Header";
+import CountryList from "./CountryList";
+import SingleCountry from "../components/SingleCountry";
+import { useGlobalContext } from "../context";
 const App = () => {
   useEffect(() => {
-    document.title = 'Country Finder';
+    document.title = "Country Finder";
   }, []);
 
   const { darkMode } = useGlobalContext();

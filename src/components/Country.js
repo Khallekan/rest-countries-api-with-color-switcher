@@ -1,13 +1,12 @@
-import React from 'react';
-// import PropTypes from 'prop-types';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useGlobalContext } from "../context";
 
-import { Link } from 'react-router-dom';
-import { useGlobalContext } from '../context';
-const Country = ({ flag, name, population, region, capital, demonym }) => {
-  const { darkMode, dropDown } = useGlobalContext();
+const Country = ({ name, flag, demonym, population, region, capital }) => {
+  const { darkMode } = useGlobalContext();
 
   const numberWithCommas = (x) => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   return (
@@ -27,7 +26,7 @@ const Country = ({ flag, name, population, region, capital, demonym }) => {
       <section className='lg:p-6 lg:py-10 p-4'>
         <h1 className='font-bold mb-2 md:text-base'>{name}</h1>
         <p>
-          <span className='font-semibold font-sm'>Population:</span>{' '}
+          <span className='font-semibold font-sm'>Population:</span>{" "}
           {numberWithCommas(population)}
         </p>
         <p>

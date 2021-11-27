@@ -1,18 +1,20 @@
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'HANDLE_DARK_MODE':
+    case "HANDLE_DARK_MODE":
       if (!state.darkMode) {
-        localStorage.setItem('darkMode', !state.darkMode);
+        localStorage.setItem("darkMode", !state.darkMode);
       } else {
-        localStorage.removeItem('darkMode');
+        localStorage.removeItem("darkMode");
       }
       return { ...state, darkMode: !state.darkMode };
-    case 'SET_REGIONS':
+    case "SET_REGIONS":
       return { ...state, allRegions: action.payload };
     case `CREATE_DROPDOWN_REF`:
       return { ...state, dropDown: action.payload };
     case `HANDLE_DROPDOWN`:
       return { ...state, isDropDownOpen: !state.isDropDownOpen };
+    case `HANDLE_DROPDOWN_NEW`:
+      return { ...state, isDropDownOpen: action.payload };
     case `DARK_MODE_FALSE`:
       return { ...state, darkMode: false };
     case `UPDATE_COUNTRIES_LIST`:
